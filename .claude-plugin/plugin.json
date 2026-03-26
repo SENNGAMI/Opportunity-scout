@@ -1,0 +1,16 @@
+{
+  "name": "opportunity-scout",
+  "version": "1.0.0",
+  "description": "Autonomous market intelligence agent that scans for AI business opportunities through structured multi-phase research.",
+  "author": "jeff",
+  "skills": [
+    {
+      "name": "opportunity-scout",
+      "path": "plugins/opportunity-scout/SKILL.md",
+      "description": "Scans the market to discover AI business opportunities where no solution exists or existing solutions are underdeveloped."
+    }
+  ],
+  "dependencies": {
+    "mcp": ["tavily"]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "opportunity-scout",
+  "displayName": "Opportunity Scout",
+  "version": "1.0.0",
+  "description": "Autonomous market intelligence agent. Scans YC batches, Product Hunt, Reddit, HackerNews, and App Store reviews for real user pain signals, maps funded AI verticals for adjacent gaps, performs structural competitive analysis, and scores surviving candidates across five dimensions. Produces a ranked opportunity memo with wedge statements and two-week validation plans.",
+  "category": "research",
+  "tags": ["startup", "market-research", "ai", "business", "opportunities"],
+  "author": {
+    "name": "jeff"
+  },
+  "repository": "https://github.com/your-username/opportunity-scout",
+  "license": "MIT",
+  "prerequisites": [
+    "Tavily MCP server configured and running",
+    "Tavily API key set in environment"
+  ],
+  "skills": ["opportunity-scout"]
+}
