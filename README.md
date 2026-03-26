@@ -1,52 +1,98 @@
 # Opportunity Scout
 
-An autonomous market intelligence skill for Claude Code. Scans multiple live sources to find AI business opportunities through structured, multi-phase research — without fabricating sources or skipping evidence.
+> An evidence-first Claude Code skill that finds AI startup opportunities from live market signals, not brainstormed guesses.
 
-## What it does
+[![License: MIT](https://img.shields.io/badge/license-MIT-black.svg)](./LICENSE)
+[![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-blue.svg)](https://github.com/SENNGAMI/Opportunity-scout)
+[![Research Source](https://img.shields.io/badge/Live%20Research-Tavily-green.svg)](https://tavily.com)
 
-1. **Phase 1a** — Two agents run in parallel:
-   - `signal-scanner`: Scans YC batches, Product Hunt, Reddit, HackerNews, App Store reviews, and GitHub issues for real user pain signals
-   - `gap-detector`: Maps funded AI verticals and applies the neighbor gap method to find adjacent markets with no funded solution
+Opportunity Scout is a market intelligence skill for Claude Code. It scans live sources, filters weak ideas, maps competitive gaps, and returns ranked AI opportunities with timing analysis, wedge statements, and concrete validation plans.
 
-2. **Phase 1b** — After Phase 1a completes:
-   - `competitor-mapper`: For each candidate, maps competitor landscape, assesses structural weaknesses, and produces a wedge statement
+It is built for prompts like:
 
-3. **Review checkpoint** — Presents candidates with kill-filter results. You confirm which to advance.
+- "Find me a startup idea"
+- "What should I build?"
+- "What AI opportunities exist right now?"
+- "Scan the market for gaps"
+- "What's underdeveloped in AI?"
 
-4. **Phase 2** — `timing-judge` scores each confirmed candidate across four structural trigger dimensions (technology, regulatory, behavioral, market validation).
+## Why This Skill Exists
 
-5. **Phase 3** — Scores all surviving candidates across five dimensions and produces a ranked opportunity memo with wedge statements and two-week validation plans.
+Most idea-generation workflows produce polished fiction.
 
-## Prerequisites
+Opportunity Scout is opinionated in the opposite direction:
 
-### 1. Tavily MCP server
+- It starts from real user pain, not vibes
+- It treats competition as evidence of demand
+- It looks for structural timing shifts, not "hot markets"
+- It refuses to fabricate sources or hide weak evidence
 
-This skill uses Tavily for all live web research. You need a Tavily API key and the Tavily MCP server configured.
+## What You Get
 
-Install the Tavily MCP server:
+For each surviving opportunity, the skill produces:
+
+- A one-line opportunity hypothesis
+- The specific buyer and wedge
+- Competitive weaknesses in the current market
+- Timing analysis based on structural triggers
+- Weighted scoring across five dimensions
+- Source-backed evidence with URLs
+- A two-week validation plan
+- A recommendation: `KILL`, `REVISIT`, or `PROCEED`
+
+## How It Works
+
+```text
+Phase 1a
+  signal-scanner   -> finds user pain across YC, Product Hunt, Reddit, HN, reviews, GitHub
+  gap-detector     -> finds adjacent markets with missing or weak AI products
+
+Phase 1b
+  competitor-mapper -> maps incumbents, weaknesses, and wedge statements
+
+Checkpoint
+  you review candidates before deeper scoring
+
+Phase 2
+  timing-judge -> checks whether the market timing is structurally right
+
+Phase 3
+  ranked opportunity memo -> final scoring, recommendation, validation plan
+```
+
+## Scoring Model
+
+| Dimension | Weight | Measures |
+| --- | ---: | --- |
+| Pain strength | 25% | How frequent and costly the problem is |
+| Buyer clarity | 20% | How clearly the first customer can be named |
+| Timing maturity | 20% | Whether a real trigger event makes the opportunity viable now |
+| Wedge quality | 20% | Why incumbents cannot or will not respond well |
+| Buildability | 15% | Whether an MVP can be tested in four weeks |
+
+Maximum weighted score: `5.00`
+
+## Requirements
+
+### 1. Claude Code
+
+This repo is a Claude Code skill, not a standalone app.
+
+### 2. Tavily MCP
+
+Opportunity Scout depends on Tavily for live web research.
+
+Add Tavily to Claude Code:
 
 ```bash
-npm install -g @tavily/mcp-server
+claude mcp add --transport http tavily https://mcp.tavily.com/mcp/?tavilyApiKey=YOUR_TAVILY_API_KEY
 ```
 
-Add to your Claude Code MCP config (`~/.claude/mcp_servers.json` or equivalent):
+Get an API key from [tavily.com](https://tavily.com).
 
-```json
-{
-  "tavily": {
-    "command": "tavily-mcp-server",
-    "env": {
-      "TAVILY_API_KEY": "your-api-key-here"
-    }
-  }
-}
-```
+### 3. Allow Tavily Tools For Sub-Agents
 
-Get a Tavily API key at [tavily.com](https://tavily.com).
-
-### 2. Allow Tavily tools in settings
-
-Add the following to `~/.claude/settings.local.json` so sub-agents can use Tavily without hitting permission prompts:
+Sub-agents cannot stop for interactive permission prompts, so allow the Tavily tools in `~/.claude/settings.local.json`:
 
 ```json
 {
@@ -63,95 +109,77 @@ Add the following to `~/.claude/settings.local.json` so sub-agents can use Tavil
 }
 ```
 
-This is required because sub-agents cannot receive interactive permission prompts.
+## Install
 
-## Installation
-
-### Option A: Git clone (recommended)
+Clone the repo:
 
 ```bash
-git clone https://github.com/your-username/opportunity-scout.git
-cp -r opportunity-scout/plugins/opportunity-scout ~/.claude/skills/
+git clone https://github.com/SENNGAMI/Opportunity-scout.git
 ```
 
-Then restart Claude Code. The `/opportunity-scout` skill will be available.
+Copy the skill into your Claude Code skills directory:
 
-### Option B: Manual copy
-
-Copy the `plugins/opportunity-scout/` folder into `~/.claude/skills/`:
-
+```bash
+mkdir -p ~/.claude/skills
+cp -R Opportunity-scout/plugins/opportunity-scout ~/.claude/skills/
 ```
-~/.claude/skills/
-└── opportunity-scout/
-    ├── SKILL.md
-    ├── agents/
-    │   ├── signal-scanner.md
-    │   ├── gap-detector.md
-    │   ├── competitor-mapper.md
-    │   └── timing-judge.md
-    ├── templates/
-    │   └── opportunity-memo.md
-    ├── knowledge/
-    └── memory/
-```
+
+Restart Claude Code. The skill will then be available as `/opportunity-scout`.
 
 ## Usage
 
-In Claude Code, run:
+Run:
 
-```
+```bash
 /opportunity-scout
 ```
 
-Or trigger it naturally:
+Or invoke it naturally:
 
-- "find me a startup idea"
-- "what should I build"
-- "what AI opportunities exist right now"
-- "scan the market for gaps"
-- "what's underdeveloped in AI"
+- "Find me a startup idea in B2B AI"
+- "What should I build in workflow automation?"
+- "Scan the market for underdeveloped AI products"
 
-## Output
+## Output Style
 
-The skill produces a ranked opportunity memo for each surviving candidate:
+The final memo is designed to answer five practical questions fast:
 
-- Hypothesis (one sentence)
-- What changed to create this opportunity
-- Target buyer with specific role, company type, and how to reach the first 10
-- Current alternatives and their failure modes
-- Evidence base with source URLs and verbatim quotes
-- Scoring across five dimensions with confidence labels
-- Wedge statement
-- Validation plan (specific actions executable within two weeks)
-- Recommendation: KILL / REVISIT / PROCEED
+1. What is the opportunity?
+2. Who feels the pain badly enough to buy?
+3. Why now?
+4. Why are current products weak?
+5. What should I do in the next two weeks to validate it?
 
-## Architecture
+## Repo Structure
 
-```
-SKILL.md (orchestrator)
-├── agents/signal-scanner.md     — live pain signal collection
-├── agents/gap-detector.md       — adjacent vertical gap analysis
-├── agents/competitor-mapper.md  — structural competitive analysis
-├── agents/timing-judge.md       — four-dimension timing assessment
-├── templates/opportunity-memo.md — output format
-├── knowledge/                   — reference frameworks
-└── memory/opportunity-log.md    — session history log
+```text
+plugins/opportunity-scout/
+├── SKILL.md
+├── agents/
+│   ├── signal-scanner.md
+│   ├── gap-detector.md
+│   ├── competitor-mapper.md
+│   └── timing-judge.md
+├── knowledge/
+├── memory/
+└── templates/
 ```
 
-The main thread handles orchestration and synthesis only. All web research runs exclusively in sub-agents. If a sub-agent fails, the main thread reports the failure and stops — it does not compensate by running searches itself.
+## Design Principles
 
-## Scoring dimensions
+- Main thread handles orchestration and synthesis only
+- Web research is delegated to sub-agents
+- Weak evidence lowers confidence instead of getting hidden
+- Candidates fail fast through kill filters before ranking
+- The skill stops on sub-agent failure instead of pretending the data exists
 
-| Dimension       | Weight | What it measures                               |
-|-----------------|--------|------------------------------------------------|
-| Pain strength   | 25%    | Frequency and dollar cost of the problem       |
-| Buyer clarity   | 20%    | Precision with which the first buyer is named  |
-| Timing maturity | 20%    | Presence of a structural trigger event         |
-| Wedge quality   | 20%    | Reason incumbents cannot or will not respond   |
-| Buildability    | 15%    | Whether an MVP can be tested within four weeks |
+## Example Use Cases
 
-Maximum weighted score: 5.00. Opportunities scoring above 3.5 receive a PROCEED recommendation.
+- Solo founders looking for high-signal AI opportunities
+- Operators exploring vertical SaaS wedges
+- Builders who want evidence before writing code
+- Teams running recurring market scans
 
 ## License
 
-MIT
+[MIT](./LICENSE)
