@@ -30,8 +30,16 @@ For each opportunity, use `tavily-search` and `tavily-extract`:
 - `tavily-search`: "[opportunity domain] software"
 - `tavily-search`: "[opportunity domain] startup"
 - `tavily-search`: "[opportunity domain] site:ycombinator.com OR site:producthunt.com OR site:g2.com"
-- `tavily-search`: "[opportunity domain] funding announcement 2025 2026"
+- `tavily-search` with `time_range="month"`: "[competitor name] funding valuation" — use the most recent 30 days only
+- `tavily-search` with `time_range="year"`: "[competitor name] funding valuation" — use as fallback if month returns no results
 - `tavily-extract` on competitor websites and review pages for detailed data
+
+**Freshness rule for numerical claims**: Any valuation, funding amount, ARR, or user count claim
+must come from a source published within the last 90 days. If the most recent source found is
+older than 90 days, run a second search with `time_range="month"` using "[competitor name]
+latest valuation [current year]" before recording the number. If no source within 90 days
+exists, mark the field as `[UNVERIFIED — source older than 90 days, human check required]`.
+Never carry a number into the output without a dated source URL.
 
 Classify each competitor as:
 - Direct: Solving the exact same problem for the exact same buyer
@@ -70,11 +78,17 @@ and this gives us [specific advantage] that expands to [larger market]."
 Opportunity ID: [from Signal Scanner or Gap Detector]
 Competitor name: [name]
 Funding stage: [Seed/A/B/Public/Unknown]
-Estimated users: [range or "unknown"]
-Average rating: [source + score]
+Latest funding amount: [amount — e.g. $760M Series D]
+Latest valuation: [amount — e.g. $11B] | Source URL: [exact URL] | Published: [YYYY-MM-DD]
+Estimated users: [range or "unknown"] | Source URL: [exact URL] | Published: [YYYY-MM-DD]
+Average rating: [source + score] | Source URL: [exact URL]
 Structural weakness: [which of the 5 types + explanation]
 Wedge available: [Yes/No + description]
 Penetration rate estimate: [% of TAM currently served]
 Threat level if we enter: [Low/Medium/High]
 Conclusion: [Is this a viable entry given competition? Y/N + reason]
 ```
+
+**Output rule**: Every numerical field (valuation, funding, users) must include a Source URL
+and a Published date. If either is missing, the field must read `[UNVERIFIED]` — do not leave
+the number without a dated source.

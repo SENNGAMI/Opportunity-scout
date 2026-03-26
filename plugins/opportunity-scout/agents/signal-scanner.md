@@ -24,11 +24,13 @@ Available tools: `tavily-search`, `tavily-extract`, `tavily-crawl`, `tavily-map`
 
 ### Source 1: YC Recent Batches (W25, S25, W26)
 - Tool: `tavily-crawl` on https://www.ycombinator.com/companies
-  + `tavily-search` for "YC [batch] AI companies [vertical]"
+  + `tavily-search` with `time_range="year"` for "YC [batch] AI companies [vertical]"
 - What to extract: Which verticals are being funded? Where do you see
   1–2 companies but no clear winner yet?
 - Output format: Vertical name, number of funded companies, estimated
   market stage (emerging / developing / maturing)
+- Date rule: Only include batches and companies you can confirm via a live source URL.
+  If a batch page is inaccessible, mark as `[UNVERIFIED — crawl failed]`.
 
 ### Source 2: Product Hunt
 - Tool: `tavily-search` for "site:producthunt.com [vertical] AI tool"
@@ -93,7 +95,8 @@ Search popular repositories in AI/ML space for:
 ```
 Signal ID: [sequential number]
 Source: [Reddit/HN/App Store/GitHub/Product Hunt]
-Source URL: [exact URL]
+Source URL: [exact URL — mandatory, no exceptions]
+Published date: [YYYY-MM-DD — from the article or post metadata]
 Data origin: [🟢 LIVE — 來自即時搜尋 | 🟡 MIXED — 即時+訓練知識 | 🔴 TRAINING — 無即時數據]
 Pain statement: [verbatim quote or precise description]
 Frequency indicator: [how many independent mentions]

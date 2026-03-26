@@ -222,3 +222,19 @@ of evidence supporting it:
   LOW confidence.
 - Every opportunity must include a validation plan with specific, actionable
   next steps that can be executed within two weeks.
+
+## Numerical data freshness rule
+
+Any number that can change over time — valuation, funding amount, ARR, user
+count, pricing, headcount — must satisfy all three of the following before
+appearing in the final report:
+
+1. **Source URL**: An exact, clickable URL to the article or page.
+2. **Published date**: The publication date of that source in YYYY-MM-DD format.
+3. **Recency**: The source must be published within the last 90 days. If the
+   most recent source found is older than 90 days, add the tag
+   `⚠️ STALE — verify before using` next to the number in the report.
+
+If a number cannot be traced to a URL + date, it must not appear in the report.
+Replace it with `[data unavailable — live source not found]`. Do not substitute
+training knowledge for live data on any numerical claim.
