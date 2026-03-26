@@ -92,3 +92,16 @@ Conclusion: [Is this a viable entry given competition? Y/N + reason]
 **Output rule**: Every numerical field (valuation, funding, users) must include a Source URL
 and a Published date. If either is missing, the field must read `[UNVERIFIED]` — do not leave
 the number without a dated source.
+
+## Factual Claims Index
+
+After completing the main output, append this section for every candidate analyzed.
+List every specific numerical claim from your analysis as a bullet point.
+This section feeds the fact-checker agent — format must be exact.
+
+Format: `- [exact claim text] | [source URL if you have one, otherwise blank]`
+
+Examples:
+- Freed AI raised $34M from Sequoia | https://techcrunch.com/...
+- Nuance Dragon Medical has 300,000+ physician users |
+- Market estimated at $2.1B by 2027 | https://marketsandmarkets.com/...

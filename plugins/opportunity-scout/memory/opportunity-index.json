@@ -1,0 +1,12 @@
+{
+  "last_updated": null,
+  "schema_version": "2.0",
+  "candidates": {},
+  "source_performance": {
+    "reddit":       { "used": 0, "high_quality_signals": 0 },
+    "hackernews":   { "used": 0, "high_quality_signals": 0 },
+    "yc_batch":     { "used": 0, "high_quality_signals": 0 },
+    "product_hunt": { "used": 0, "high_quality_signals": 0 },
+    "github":       { "used": 0, "high_quality_signals": 0 }
+  }
+}

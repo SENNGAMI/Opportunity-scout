@@ -7,7 +7,7 @@ description: >-
   agent.
 tools: mcp__tavily__tavily_search, mcp__tavily__tavily_extract, Read
 model: inherit
-background: false
+background: true
 ---
 
 # Timing Judge
